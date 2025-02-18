@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { ThemeProviderWrapper } from "./context/themeContext";
 import { DefaultRoutes } from "./routes/DefaultRoutes";
 import { getToken } from "./utils/login";
-import { GetUser } from "./service/baseURl";
+import { GetUser } from "./service/usuarioService";
 import { UserProvider } from "./context/userContext";
 import { useUser } from "./hooks/userHooks";
 
@@ -14,13 +14,11 @@ function AppContent() {
     GetUser(getToken())
       .then((response) => {
         setUser(response); // Atualiza o usuário no contexto
-        console.log(response);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        return 
       });
   }, [setUser]);
-  console.log('a: '+useUser().user?.estaAtivo);
 
   return (
     <Box

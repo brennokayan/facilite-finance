@@ -25,8 +25,6 @@ export async function UsuarioRoutes(app: FastifyInstance) {
             select: {
               id: true,
               titulo: true,
-              descricao: true,
-              dataPrevista: true,
               valor: true,
               estaRecebido: true,
             },
@@ -39,9 +37,7 @@ export async function UsuarioRoutes(app: FastifyInstance) {
           Gastos: {
             select: {
               id: true,
-              descricao: true,
               valor: true,
-              dataPrevista: true,
               estaPago: true,
             },
             take: limit, // Limitar a quantidade de gastos
@@ -79,8 +75,6 @@ export async function UsuarioRoutes(app: FastifyInstance) {
             select: {
               id: true,
               titulo: true,
-              descricao: true,
-              dataPrevista: true,
               valor: true,
               estaRecebido: true,
             },
@@ -93,9 +87,7 @@ export async function UsuarioRoutes(app: FastifyInstance) {
           Gastos: {
             select: {
               id: true,
-              descricao: true,
               valor: true,
-              dataPrevista: true,
               estaPago: true,
             },
             take: limit,

@@ -15,6 +15,11 @@ export async function ClasseLancamentoRoutes(app: FastifyInstance) {
                 where: {
                     estaDeletado: false
                 },
+                select: {
+                    id: true,
+                    nome: true,
+                    estaDeletado: true   
+                },
                 skip: page ? (page - 1) * (limit ?? 10) : 0,
                 take: limit
             });

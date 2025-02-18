@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PrivateRoutes } from "./PrivateRoutes";
-import { PaginaBemVindo } from "../pages/Bem_vindo(a)";
 import { PaginaLogin } from "../pages/Login";
 import { PaginaLogout } from "../pages/Logout";
 import { PaginaPainelDeControle } from "../pages/Painel_de_controle";
@@ -15,7 +14,6 @@ export function DefaultRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<PaginaLogin />} />
-        <Route path="/welcome" element={<PaginaBemVindo />} />
         <Route path="/logout" element={<PaginaLogout />} />
         <Route path="*" element={<>not found</>} />
         <Route element={<PrivateRoutes />}>

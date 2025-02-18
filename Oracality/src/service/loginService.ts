@@ -1,19 +1,7 @@
-// loginService.ts
 import { api } from "./baseURl";
 
-type LoginResponse = {
-  data?: { id: string };
-  error?: string;
-};
+export async function AuthenticateLogin(data: {nome: string, senha: string}) {
+  const response = await api.post('/auth', data);
+  return response.data.data;
 
-type Credentials = {
-  nome: string;
-  senha: string;
-};
-
-const loginService = {
-  authenticate: (credentials: Credentials) =>
-    api.post<LoginResponse>("/auth", credentials),
-};
-
-export default loginService;
+}

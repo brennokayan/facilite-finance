@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
 import { isLogged, login } from "../../utils/login";
 import { SnackBarInfo } from "../../components/snackBarInfo/snackBarInfo";
 import React from "react";
@@ -6,7 +6,7 @@ import { TextFieldPersonalizado } from "../../components/TextFieldPersonalizado"
 import { DefaultIcons } from "../../utils/defaultIcons";
 import imageLogin from "../../assets/logo 1.png";
 import imageLoginEsquerda from "../../assets/imgLogin.jpg";
-import { AuthenticateLogin } from "../../service/baseURl";
+import { AuthenticateLogin } from "../../service/loginService";
 import { Navigate } from "react-router-dom";
 
 export function PaginaLogin() {
@@ -56,7 +56,6 @@ export function PaginaLogin() {
         type: "info",
         open: true,
       });
-
     }
   }, []);
   if (isLogged()) {
@@ -165,48 +164,65 @@ export function PaginaLogin() {
                 <Box
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     gap: 2,
+                    width: "100%",
                     alignItems: "center",
-                    justifyContent: "center",
-                    width: "80%",
                   }}
                 >
-                  <DefaultIcons.User size={32} color="rgba(255,255,255, 1)" />
-                  <TextFieldPersonalizado
-                    required
-                    autoComplete="off"
-                    onChange={(newValue) => {
-                      setLoginData({
-                        ...loginData,
-                        nome: newValue.target.value,
-                      });
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80%",
                     }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "80%",
-                  }}
-                >
-                  <DefaultIcons.Password
-                    size={32}
-                    color="rgba(255,255,255, 1)"
-                  />
-                  <TextFieldPersonalizado
-                    autoComplete="off"
-                    onChange={(newValue) => {
-                      setLoginData({
-                        ...loginData,
-                        senha: newValue.target.value,
-                      });
+                  >
+                    <Tooltip title="Usuário" arrow>
+                      <DefaultIcons.User
+                        size={32}
+                        color="rgba(255,255,255, 1)"
+                      />
+                    </Tooltip>
+                    <TextFieldPersonalizado
+                      required
+                      autoComplete="off"
+                      onChange={(newValue) => {
+                        setLoginData({
+                          ...loginData,
+                          nome: newValue.target.value,
+                        });
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80%",
                     }}
-                    type="password"
-                    required
-                  />
+                  >
+                    <Tooltip title="Senha" arrow>
+                      <DefaultIcons.Password
+                        size={32}
+                        color="rgba(255,255,255, 1)"
+                      />
+                    </Tooltip>
+                    <TextFieldPersonalizado
+                      autoComplete="off"
+                      onChange={(newValue) => {
+                        setLoginData({
+                          ...loginData,
+                          senha: newValue.target.value,
+                        });
+                      }}
+                      type="password"
+                      required
+                    />
+                  </Box>
                 </Box>
                 <Box
                   sx={{

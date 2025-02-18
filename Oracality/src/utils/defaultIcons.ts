@@ -1,4 +1,4 @@
-import { CaretCircleDoubleLeft, CaretCircleDoubleRight, X, UserCircle, LockKey, List, DoorOpen, Speedometer, HandArrowDown, HandArrowUp, Users, RocketLaunch} from "@phosphor-icons/react"
+import { CaretCircleDoubleLeft, CaretCircleDoubleRight, X, UserCircle, LockKey, List, DoorOpen, Speedometer, HandArrowDown, HandArrowUp, Users, RocketLaunch, Pencil, Trash, Plus} from "@phosphor-icons/react"
 
 export const DefaultIcons = {
     VoltarCarrossel: CaretCircleDoubleLeft,
@@ -13,5 +13,9 @@ export const DefaultIcons = {
     Gasto: HandArrowUp,
     Usuarios: Users,
     Perfil: UserCircle,
-    ClasseLancamento: RocketLaunch
+    ClasseLancamento: RocketLaunch,
+    Editar: Pencil,
+    Deletar: Trash,
+    Adicionar : Plus
+
 }

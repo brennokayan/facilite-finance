@@ -25,17 +25,16 @@ export async function LucroRoutes(app: FastifyInstance){
         }
     })
     app.post("/lucro", async (request, reply) => {
-        const { titulo, descricao, dataPrevista, valor, estaRecebido, estaDeletado, idUsuario } = createLucroValidator.parse(request.body);
+        const { titulo, idClasseLancamento, valor, estaRecebido, estaDeletado, idUsuario } = createLucroValidator.parse(request.body);
         try {
             const lucro = await prisma.lucros.create({
                 data: {
                     titulo,
-                    descricao,
-                    dataPrevista,
                     valor,
                     estaRecebido,
                     estaDeletado,
-                    idUsuario
+                    idUsuario,
+                    idClasseLancamento
                 }
             })
             reply.send({ data: "Lucro criado com sucesso" }).status(201);
@@ -45,7 +44,7 @@ export async function LucroRoutes(app: FastifyInstance){
     })
     app.put("/lucro/:id", async (request, reply) => {
         const { id } = getUniqueLucroValidator.parse(request.params);
-        const { titulo, descricao, dataPrevista, valor, estaRecebido, estaDeletado, idUsuario } = updateLucroValidator.parse(request.body);
+        const { titulo, valor, idClasseLancamento, estaRecebido, estaDeletado, idUsuario } = updateLucroValidator.parse(request.body);
         try {
             const lucro = await prisma.lucros.update({
                 where: {
@@ -53,12 +52,11 @@ export async function LucroRoutes(app: FastifyInstance){
                 },
                 data: {
                     titulo,
-                    descricao,
-                    dataPrevista,
                     valor,
                     estaRecebido,
                     estaDeletado,
-                    idUsuario
+                    idUsuario,
+                    idClasseLancamento
                 }
             })
             reply.send({ data: "Lucro atualizado com sucesso" }).status(200);

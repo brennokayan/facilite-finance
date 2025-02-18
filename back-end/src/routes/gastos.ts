@@ -30,9 +30,8 @@ export async function GastosRoutes(app: FastifyInstance) {
   });
   app.post("/gasto", async (request, reply) => {
     const {
-      descricao,
+      idClasseLancamento,
       valor,
-      dataPrevista,
       estaPago,
       estaDeletado,
       idUsuario,
@@ -41,13 +40,12 @@ export async function GastosRoutes(app: FastifyInstance) {
     try {
       const gasto = await prisma.gastos.create({
         data: {
-          descricao,
           valor,
-          dataPrevista,
           estaPago,
           titulo,
           estaDeletado,
           idUsuario,
+          idClasseLancamento,
         },
       });
       reply.send({ data: "Gasto criado com sucesso" }).status(201);
@@ -57,7 +55,7 @@ export async function GastosRoutes(app: FastifyInstance) {
   });
   app.put("/gasto/:id", async (request, reply) => {
     const { id } = getUniqueGastoValidator.parse(request.params);
-    const { descricao, valor, dataPrevista, estaPago, estaDeletado, idUsuario } =
+    const { idClasseLancamento, valor, estaPago, estaDeletado, idUsuario } =
       updateGastoValidators.parse(request.body);
     try {
       const gasto = await prisma.gastos.update({
@@ -65,12 +63,11 @@ export async function GastosRoutes(app: FastifyInstance) {
           id,
         },
         data: {
-          descricao,
           valor,
-          dataPrevista,
           estaPago,
           estaDeletado,
           idUsuario,
+          idClasseLancamento,
         },
       });
       reply.send({ data: "Gasto atualizado com sucesso" }).status(200);
