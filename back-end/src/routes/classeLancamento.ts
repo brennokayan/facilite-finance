@@ -4,6 +4,65 @@ import { classeLancamentoCreateValidators, classeLancamentoGetIdValidator, class
 import { z } from "zod";
 
 export async function ClasseLancamentoRoutes(app: FastifyInstance) {
+    app.get("/classe-lancamento/saida", async(request, reply) => {
+        const {estaDeletado, page, limit} = z.object({
+            estaDeletado: z.boolean().optional(),
+            page: z.number().optional(),
+            limit: z.number().optional()
+        }).parse(request.query);
+        try{
+            const classes  = await prisma.classeLancamento.findMany({
+                where: {
+                    estaDeletado: false,
+                    nome: {
+                        contains: "sai"
+                    }
+                },
+                select: {
+                    id: true,
+                    nome: true,
+                    estaDeletado: true   
+                },
+                skip: page ? (page - 1) * (limit ?? 10) : 0,
+                take: limit
+            });
+            reply.code(200).send({success: true, data: classes});
+        }
+        catch(err){
+            reply.code(500).send({ success: false ,data: "houve um erro ao carregar as classes de Lancamento"});
+        }
+    });
+
+    app.get("/classe-lancamento/entrada", async(request, reply) => {
+        const {estaDeletado, page, limit} = z.object({
+            estaDeletado: z.boolean().optional(),
+            page: z.number().optional(),
+            limit: z.number().optional()
+        }).parse(request.query);
+        try{
+            const classes  = await prisma.classeLancamento.findMany({
+                where: {
+                    estaDeletado: false,
+                    nome: {
+                        contains: "ent"
+                    }
+                },
+                select: {
+                    id: true,
+                    nome: true,
+                    estaDeletado: true   
+                },
+                skip: page ? (page - 1) * (limit ?? 10) : 0,
+                take: limit
+            });
+            reply.code(200).send({success: true, data: classes});
+        }
+        catch(err){
+            reply.code(500).send({ success: false ,data: "houve um erro ao carregar as classes de Lancamento"});
+        }
+    });
+
+
     app.get("/classe-lancamento", async(request, reply) => {
         const {estaDeletado, page, limit} = z.object({
             estaDeletado: z.boolean().optional(),
@@ -13,7 +72,7 @@ export async function ClasseLancamentoRoutes(app: FastifyInstance) {
         try{
             const classes  = await prisma.classeLancamento.findMany({
                 where: {
-                    estaDeletado: false
+                    estaDeletado: false,
                 },
                 select: {
                     id: true,

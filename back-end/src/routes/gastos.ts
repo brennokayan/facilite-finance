@@ -9,7 +9,32 @@ import {
 export async function GastosRoutes(app: FastifyInstance) {
   app.get("/gastos", async (request, reply) => {
     try {
-      const gastos = await prisma.gastos.findMany({});
+      const gastos = await prisma.gastos.findMany({
+        where: {
+          estaDeletado: false,
+        },
+        select:{
+          id:true,
+          valor:true,
+          estaPago:true,
+          titulo:true,
+          estaDeletado:true,
+          idUsuario:true,
+          idClasseLancamento:true,
+          criadoEm:true,
+          ModificadoEm:true,
+          ClasseLucro: {
+            select: {
+              nome: true,
+            },
+          },
+          Usuario: {
+            select: {
+              nome: true,
+            },
+          }
+        }
+      });
       reply.send({ data: gastos }).status(200);
     } catch (err) {
       reply.send({ error: err }).status(500);

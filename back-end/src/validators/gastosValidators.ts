@@ -5,7 +5,7 @@ export const getUniqueGastoValidator = z.object({
 })
 
 export const updateGastoValidators = z.object({
-    idClasseLancamento: z.string().cuid(),
+    idClasseLancamento: z.string().cuid().optional(),
     valor: z.number().positive().optional(),
     estaPago: z.boolean().optional(),
     titulo: string().min(3).max(255).optional(),

@@ -4,10 +4,10 @@ import ComponenteNavBar from "../../components/navBar";
 import { useUser } from "../../hooks/userHooks";
 import useSWR from "swr";
 import classeLancamentoService from "../../service/classeLancamentoService";
-import { TableClasseLancamentoComponent } from "./components/table/tableClasseLancamentoComponent";
 import { ModalEditClasseLancamentoComponet } from "./components/modal/ModalEditAddClasseLancamentoComponet";
 import { ModalDeleteClasseLancamentoComponent } from "./components/modal/ModalDeleteClasseLancamentoComponent";
 import { data } from "../../types/classeLancamentoType";
+import { TableComponent } from "../../components/table/tableGastoComponent";
 
 export function ClasseLancamento() {
   document.title = "ORCALITY - Classe de Lançamento";
@@ -42,7 +42,7 @@ export function ClasseLancamento() {
           {/* Ao abrir o modal de ADD, após a operação o SWR revalida a chave "classeLancamentos" */}
           <ModalEditClasseLancamentoComponet type="ADD" />
         </Box>
-        <TableClasseLancamentoComponent
+        <TableComponent
           head={[
             { title: "#", aling: "center" },
             { title: "Nome", aling: "center" },
