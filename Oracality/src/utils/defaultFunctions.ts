@@ -46,3 +46,9 @@ export const styleModal = {
   gap: 2,
   color: "text.primary",
 };
+
+
+export function CalcFinalValue(values: number[] | undefined): number {
+  if (!values) return 0;
+  return values.reduce((acc, value) => acc + value, 0);
+}

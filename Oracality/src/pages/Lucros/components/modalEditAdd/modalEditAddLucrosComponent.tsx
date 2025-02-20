@@ -14,12 +14,13 @@ import { SnackBarType } from "../../../../types/SnackBarType";
 import { styleModal } from "../../../../utils/defaultFunctions";
 import { DefaultIcons } from "../../../../utils/defaultIcons";
 import {
-  data,
   dataToEditAndAddgastoAddEditType,
 } from "../../../../types/gastoType";
 import gastosService from "../../../../service/gastosService";
 import classeLancamentoService from "../../../../service/classeLancamentoService";
 import { optionsSelect } from "../renderSelectOptionsComponent";
+import { data, dataToEditAndAddLucroType } from "../../../../types/lucroType";
+import lucrosService from "../../../../service/lucrosService";
 
 interface Props {
   data?: data;
@@ -27,9 +28,9 @@ interface Props {
   idUsuario?: string;
 }
 
-export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
+export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
   const {data: classeLancamento, error, isLoading} = useSWR("classeLancamentos", async () => {
-    const response = await classeLancamentoService.getSaida();
+    const response = await classeLancamentoService.getEntrada();
     return response.data;
   })
   const [formData, setFormData] = React.useState({
@@ -37,7 +38,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
     valor: 0,
     idUsuario: idUsuario,//"cm4lp22k90000z95wx76icoq9",
     idClasseLancamento: "",
-    estaPago: true,
+    estaRecebido: true,
     estaDeletado: false,
   });
   const [open, setOpen] = React.useState(false);
@@ -74,11 +75,11 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .then(() => {
         setSnackBar({
           ...snackBar,
-          message: "Gasto editado com sucesso!",
+          message: "Lucro editado com sucesso!",
           type: "success",
           open: true,
         });
-        mutate("gastos"); // Atualiza os dados da lista
+        mutate("lucros"); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);
@@ -86,7 +87,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .catch(() => {
         setSnackBar({
           ...snackBar,
-          message: "Erro ao editar Gasto!",
+          message: "Erro ao editar Lucro!",
           type: "error",
           open: true,
         });
@@ -96,19 +97,19 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
 
 
   async function handleAdd(
-    data: dataToEditAndAddgastoAddEditType
+    data: dataToEditAndAddLucroType
   ) {
     console.log(data)
-    await gastosService
+    await lucrosService
       .create(data)
       .then(() => {
         setSnackBar({
           ...snackBar,
-          message: "Gasto adicionado com sucesso!",
+          message: "Lucro adicionado com sucesso!",
           type: "success",
           open: true,
         });
-        mutate("gastos"); // Atualiza os dados da lista
+        mutate("lucros"); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);
@@ -116,7 +117,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .catch(() => {
         setSnackBar({
           ...snackBar,
-          message: "Erro ao adicionar Gasto!",
+          message: "Erro ao adicionar Lucro!",
           type: "error",
           open: true,
         });
@@ -134,7 +135,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
               setOpen(true);
             }}
           >
-            <DefaultIcons.Adicionar size={22} /> Gastos
+            <DefaultIcons.Adicionar size={22} /> Lucros
           </Button>
         </>
       ) : (
@@ -159,11 +160,11 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
         <Box sx={styleModal}>
           {type === "EDIT" ? (
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Editar Gasto
+              Editar Lucro
             </Typography>
           ) : (
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Adicionar novo Gasto
+              Adicionar novo Lucro
             </Typography>
           )}
           <Box>

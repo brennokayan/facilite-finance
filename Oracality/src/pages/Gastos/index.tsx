@@ -5,7 +5,7 @@ import gastosService from "../../service/gastosService";
 import useSWR, { mutate } from "swr";
 import { TableComponent } from "../../components/table/tableGastoComponent";
 import { data } from "../../types/gastoType";
-import { ToBRL, ToISODate } from "../../utils/defaultFunctions";
+import { CalcFinalValue, ToBRL, ToISODate } from "../../utils/defaultFunctions";
 import { ModalEditAddGastoComponent } from "./components/modalEditAdd/modalEditAddGastoComponent";
 import { DefaultIcons } from "../../utils/defaultIcons";
 
@@ -30,12 +30,12 @@ export function PaginaGastos() {
     <>
       <ComponenteNavBar nomeUsuario={dataUser?.nome || ""} />
       <Container maxWidth="lg">
-        <h1>Gastos</h1>
+        <h1>{ToBRL(CalcFinalValue(gastos?.data.map((item: data) => item.valor)))}</h1>
         <Box sx={{
           display: "flex",
           justifyContent: "flex-end",
         }}>
-          <ModalEditAddGastoComponent type="ADD" />
+          <ModalEditAddGastoComponent type="ADD" idUsuario={dataUser?.id} />
         </Box>
         <TableComponent
           head={[
@@ -58,7 +58,7 @@ export function PaginaGastos() {
                 {item.estaPago ? <p>Pago</p> : <p>Não pago</p>}
               </TableCell>
               <TableCell align="center">
-                <ModalEditAddGastoComponent data={item} type="EDIT" />
+                <ModalEditAddGastoComponent data={item} type="EDIT" idUsuario={dataUser?.id} />
                 <IconButton onClick={() => {
                   gastosService.update(item.id, { estaDeletado: true }).then(() => {
                     mutate("gastos");

@@ -8,8 +8,8 @@ export const updateLucroValidator = z.object({
   valor: z.number().positive().optional(),
   estaRecebido: z.boolean().optional(),
   estaDeletado: z.boolean().optional(),
-  idUsuario: z.string().cuid(),
-  idClasseLancamento: z.string().cuid(),
+  idUsuario: z.string().cuid().optional(),
+  idClasseLancamento: z.string().cuid().optional(),
 });
 
 export const createLucroValidator = z.object({
