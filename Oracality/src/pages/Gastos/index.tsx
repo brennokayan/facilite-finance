@@ -10,6 +10,7 @@ import { ModalEditAddGastoComponent } from "./components/modalEditAdd/modalEditA
 import { DefaultIcons } from "../../utils/defaultIcons";
 
 export function PaginaGastos() {
+  document.title = "ORCALITY - Gastos";
   const dataUser = useUser()?.user;
   const {
     data: gastos,

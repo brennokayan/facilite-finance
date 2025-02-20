@@ -13,14 +13,13 @@ import { SnackBarInfo } from "../../../../components/snackBarInfo/snackBarInfo";
 import { SnackBarType } from "../../../../types/SnackBarType";
 import { styleModal } from "../../../../utils/defaultFunctions";
 import { DefaultIcons } from "../../../../utils/defaultIcons";
-import {
-  dataToEditAndAddgastoAddEditType,
-} from "../../../../types/gastoType";
+import { dataToEditAndAddgastoAddEditType } from "../../../../types/gastoType";
 import gastosService from "../../../../service/gastosService";
 import classeLancamentoService from "../../../../service/classeLancamentoService";
 import { optionsSelect } from "../renderSelectOptionsComponent";
 import { data, dataToEditAndAddLucroType } from "../../../../types/lucroType";
 import lucrosService from "../../../../service/lucrosService";
+import { NumericFormat } from "react-number-format";
 
 interface Props {
   data?: data;
@@ -29,18 +28,23 @@ interface Props {
 }
 
 export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
-  const {data: classeLancamento, error, isLoading} = useSWR("classeLancamentos", async () => {
+  const {
+    data: classeLancamento,
+    error,
+    isLoading,
+  } = useSWR("classeLancamentos", async () => {
     const response = await classeLancamentoService.getEntrada();
     return response.data;
-  })
+  });
   const [formData, setFormData] = React.useState({
     titulo: "",
     valor: 0,
-    idUsuario: idUsuario,//"cm4lp22k90000z95wx76icoq9",
+    idUsuario: idUsuario, //"cm4lp22k90000z95wx76icoq9",
     idClasseLancamento: "",
     estaRecebido: true,
     estaDeletado: false,
   });
+
   const [open, setOpen] = React.useState(false);
   const [snackBar, setSnackBar] = React.useState<{
     open: boolean;
@@ -70,7 +74,11 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
     data: dataToEditAndAddgastoAddEditType,
     id: string
   ) {
-    await gastosService
+    if(idUsuario===undefined){
+      return;
+    }
+    else{
+      await gastosService
       .update(id, data)
       .then(() => {
         setSnackBar({
@@ -92,14 +100,10 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
           open: true,
         });
       });
+    }
   }
 
-
-
-  async function handleAdd(
-    data: dataToEditAndAddLucroType
-  ) {
-    console.log(data)
+  async function handleAdd(data: dataToEditAndAddLucroType) {
     await lucrosService
       .create(data)
       .then(() => {
@@ -181,7 +185,7 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
                   }}
                 >
                   <TextField
-                    label="titulo"
+                    label="Título"
                     defaultValue={data?.titulo}
                     variant="outlined"
                     fullWidth
@@ -189,6 +193,41 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
                       setFormData({ ...formData, titulo: e.target.value })
                     }
                   />
+                  <NumericFormat
+                    defaultValue={data?.valor}
+                    required
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    // prefix="R$ "
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    customInput={TextField}
+                    label="Valor"
+                    fullWidth
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        valor: Number(
+                          e.target.value.replace(".", "").replace(",", ".")
+                        ),
+                      })
+                    }
+                  />
+                  <TextField
+                    select
+                    label="Classe de lançamento"
+                    defaultValue={data?.idClasseLancamento}
+                    variant="outlined"
+                    fullWidth
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        idClasseLancamento: e.target.value,
+                      })
+                    }
+                  >
+                    {optionsSelect(isLoading, error, classeLancamento)}
+                  </TextField>
                 </Box>
               ) : (
                 <Box
@@ -209,15 +248,22 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
                       setFormData({ ...formData, titulo: e.target.value })
                     }
                   />
-                  <TextField
+                  <NumericFormat
+                    required
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    // prefix="R$ "
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    customInput={TextField}
                     label="Valor"
-                    variant="outlined"
-                    type="number"
                     fullWidth
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        valor: Number(e.target.value),
+                        valor: Number(
+                          e.target.value.replace(".", "").replace(",", ".")
+                        ),
                       })
                     }
                   />
@@ -233,9 +279,7 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
                       })
                     }
                   >
-                    {
-                      optionsSelect(isLoading, error, classeLancamento)
-                    }
+                    {optionsSelect(isLoading, error, classeLancamento)}
                   </TextField>
                 </Box>
               )}
@@ -250,8 +294,6 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
                   onClick={() => {
                     if (data?.id) {
                       handleEdit(formData, data.id);
-                    } else {
-                      console.error("ID is undefined");
                     }
                   }}
                 >

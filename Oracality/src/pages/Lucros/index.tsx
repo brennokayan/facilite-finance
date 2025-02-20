@@ -11,7 +11,7 @@ import { DefaultIcons } from "../../utils/defaultIcons";
 
 export function PaginaLucros() {
   const dataUser = useUser()?.user;
-
+  document.title = "ORCALITY - Lucros";
   const {
     data: lucros,
     error,

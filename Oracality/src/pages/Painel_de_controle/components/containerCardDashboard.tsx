@@ -16,11 +16,11 @@ export function ComponenteContainerCardDashboard() {
       <CompoenenteCardDashboard
         icone={
           <Box sx={{ color: (theme) => theme.palette.secondary.main }}>
-            <DefaultIcons.Usuarios size={28} />
+            <DefaultIcons.ClasseLancamento size={28} />
           </Box>
         }
-        tipo="USUARIOS"
-        titulo="Ir aos Usuários"
+        tipo="CLASSE-LANCAMENTO"
+        titulo="Ir as Classe de Lançamentos"
         valor={0}
       />
       <CompoenenteCardDashboard

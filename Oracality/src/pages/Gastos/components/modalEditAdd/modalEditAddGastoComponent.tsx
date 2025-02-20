@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 import useSWR, { mutate } from "swr";
 import { SnackBarInfo } from "../../../../components/snackBarInfo/snackBarInfo";
@@ -20,6 +20,7 @@ import {
 import gastosService from "../../../../service/gastosService";
 import classeLancamentoService from "../../../../service/classeLancamentoService";
 import { optionsSelect } from "../renderSelectOptionsComponent";
+import { NumericFormat } from "react-number-format";
 
 interface Props {
   data?: data;
@@ -28,14 +29,18 @@ interface Props {
 }
 
 export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
-  const {data: classeLancamento, error, isLoading} = useSWR("classeLancamentos", async () => {
+  const {
+    data: classeLancamento,
+    error,
+    isLoading,
+  } = useSWR("classeLancamentos", async () => {
     const response = await classeLancamentoService.getSaida();
     return response.data;
-  })
+  });
   const [formData, setFormData] = React.useState({
     titulo: "",
     valor: 0,
-    idUsuario: idUsuario,//"cm4lp22k90000z95wx76icoq9",
+    idUsuario: idUsuario, //"cm4lp22k90000z95wx76icoq9",
     idClasseLancamento: "",
     estaPago: true,
     estaDeletado: false,
@@ -50,6 +55,19 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
     message: "",
     type: "info",
   });
+
+  useEffect(() => {
+    if (type === "EDIT" && data) {
+      setFormData({
+        titulo: data.titulo,
+        valor: data.valor,
+        idUsuario: data.idUsuario,
+        idClasseLancamento: data.idClasseLancamento,
+        estaPago: data.estaPago,
+        estaDeletado: data.estaDeletado,
+      });
+    }
+  }, [data, type]);
 
   function handleClose(
     _event: React.SyntheticEvent,
@@ -93,12 +111,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       });
   }
 
-
-
-  async function handleAdd(
-    data: dataToEditAndAddgastoAddEditType
-  ) {
-    console.log(data)
+  async function handleAdd(data: dataToEditAndAddgastoAddEditType) {
     await gastosService
       .create(data)
       .then(() => {
@@ -180,7 +193,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
                   }}
                 >
                   <TextField
-                    label="titulo"
+                    label="Título"
                     defaultValue={data?.titulo}
                     variant="outlined"
                     fullWidth
@@ -188,6 +201,41 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
                       setFormData({ ...formData, titulo: e.target.value })
                     }
                   />
+                  <NumericFormat
+                    defaultValue={data?.valor}
+                    required
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    // prefix="R$ "
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    customInput={TextField}
+                    label="Valor"
+                    fullWidth
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        valor: Number(
+                          e.target.value.replace(".", "").replace(",", ".")
+                        ),
+                      })
+                    }
+                  />
+                  <TextField
+                    select
+                    label="Classe de lançamento"
+                    defaultValue={data?.idClasseLancamento}
+                    variant="outlined"
+                    fullWidth
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        idClasseLancamento: e.target.value,
+                      })
+                    }
+                  >
+                    {optionsSelect(isLoading, error, classeLancamento)}
+                  </TextField>
                 </Box>
               ) : (
                 <Box
@@ -208,15 +256,22 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
                       setFormData({ ...formData, titulo: e.target.value })
                     }
                   />
-                  <TextField
+                  <NumericFormat
+                    required
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    // prefix="R$ "
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    customInput={TextField}
                     label="Valor"
-                    variant="outlined"
-                    type="number"
                     fullWidth
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        valor: Number(e.target.value),
+                        valor: Number(
+                          e.target.value.replace(".", "").replace(",", ".")
+                        ),
                       })
                     }
                   />
@@ -232,9 +287,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
                       })
                     }
                   >
-                    {
-                      optionsSelect(isLoading, error, classeLancamento)
-                    }
+                    {optionsSelect(isLoading, error, classeLancamento)}
                   </TextField>
                 </Box>
               )}
@@ -249,8 +302,6 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
                   onClick={() => {
                     if (data?.id) {
                       handleEdit(formData, data.id);
-                    } else {
-                      console.error("ID is undefined");
                     }
                   }}
                 >

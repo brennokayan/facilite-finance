@@ -4,7 +4,7 @@ import { ToBRL } from "../../../utils/defaultFunctions";
 
 interface CardDashboardProps {
   titulo: string;
-  tipo: "USUARIOS" | "LUCROS" | "GASTOS";
+  tipo: "CLASSE-LANCAMENTO" | "LUCROS" | "GASTOS";
   valor?: number;
   icone: React.ReactNode;
 }
@@ -44,20 +44,8 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
             justifyContent: "center",
           }}
         >
-          {props.tipo === "USUARIOS" ? (
+          {props.tipo === "CLASSE-LANCAMENTO" ? (
             <>
-                <Typography
-                  sx={{
-                    fontSize: {
-                      xs: 12,
-                      lg: 16
-                    },
-                    fontWeight: "bold",
-                    color: (theme) => theme.palette.text.secondary,
-                  }}
-                >
-                  {props.tipo === "USUARIOS" ? "USUÁRIOS" : ""}
-                </Typography>
               <Typography
                 sx={{
                   fontSize: {
@@ -68,7 +56,7 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
                   color: (theme) => theme.palette.secondary.main,
                 }}
               >
-                Ver os usuários
+                Classes de Lançamento
               </Typography>
             </>
           ) : (

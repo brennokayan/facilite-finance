@@ -28,7 +28,6 @@ export function PaginaLogin() {
     e.preventDefault();
     AuthenticateLogin(loginData)
       .then((response) => {
-        console.log(response.id);
         login(response.id, () => {
           setSnackBar({
             ...snackBar,
