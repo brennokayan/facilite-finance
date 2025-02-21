@@ -1,3 +1,5 @@
+//graficoDashboard.tsx
+
 import { Box, Typography } from "@mui/material";
 import {
   ResponsiveContainer,

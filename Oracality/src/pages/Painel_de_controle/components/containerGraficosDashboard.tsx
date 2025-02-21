@@ -1,3 +1,5 @@
+//containerGraficosDashboard.tsx
+
 import { Box } from "@mui/material";
 import { ComponenteGraficoDashboard } from "./graficoDashboard";
 
