@@ -52,3 +52,15 @@ export function CalcFinalValue(values: number[] | undefined): number {
   if (!values) return 0;
   return values.reduce((acc, value) => acc + value, 0);
 }
+
+
+// Função para obter o primeiro e o último dia do mês no formato 'YYYY-MM-DD'
+export function getDefaultDates(){
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return {
+    dataInicio: firstDay.toISOString().slice(0, 10),
+    dataFim: lastDay.toISOString().slice(0, 10),
+  };
+};

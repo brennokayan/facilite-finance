@@ -31,9 +31,6 @@ export function PaginaPainelDeControle() {
   if (isLoadingLucros || isLoadingGastos) return <div>Carregando...</div>;
   if (errorLucros || errorGastos) return <div>Erro ao carregar</div>;
 
-  // const mesAtual = new Date().getMonth() + 1;
-  
-
 
   return (
     <>

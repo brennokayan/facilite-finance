@@ -1,3 +1,4 @@
+//index.ts gastos
 import { Box, Container, IconButton, TableCell, TableRow } from "@mui/material";
 import ComponenteNavBar from "../../components/navBar";
 import { useUser } from "../../hooks/userHooks";
@@ -5,25 +6,80 @@ import gastosService from "../../service/gastosService";
 import useSWR, { mutate } from "swr";
 import { TableComponent } from "../../components/table/tableGastoComponent";
 import { data } from "../../types/gastoType";
-import { CalcFinalValue, ToBRL, ToISODate } from "../../utils/defaultFunctions";
+import {
+  CalcFinalValue,
+  getDefaultDates,
+  ToBRL,
+  ToISODate,
+} from "../../utils/defaultFunctions";
 import { ModalEditAddGastoComponent } from "./components/modalEditAdd/modalEditAddGastoComponent";
 import { DefaultIcons } from "../../utils/defaultIcons";
+import React from "react";
+import { FilterControls } from "../../components/filterComponet";
+import classeLancamentoService from "../../service/classeLancamentoService";
 
 export function PaginaGastos() {
   document.title = "ORCALITY - Gastos";
   const dataUser = useUser()?.user;
+
+  const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } =
+    getDefaultDates();
+
+  const [filters, setFilters] = React.useState({
+    ordem: "desc" as "asc" | "desc",
+    field: "criadoEm" as "criadoEm" | "valor",
+    dataInicio: defaultDataInicio,
+    dataFim: defaultDataFim,
+  });
+
+  const {
+    data: classesLancamentoOptions,
+    error: errorClassesLancamento,
+    isLoading: isLoadingClassesLancamento,
+  } = useSWR("classesLancamento", async () => {
+    const response = await classeLancamentoService.getSaida();
+    return response.data;
+  });
+
   const {
     data: gastos,
     error,
     isLoading,
-  } = useSWR("gastos", async () => {
-    const response = await gastosService.getAll();
+  } = useSWR(["gastos", filters], async () => {
+    const response = await gastosService.getAll(filters);
     return response.data;
   });
-  if (isLoading || !gastos || !gastos.data) {
+
+  // Calcule a classe mais usada com base nos dados de gastos
+  const mostUsedClass = React.useMemo(() => {
+    if (!gastos || !gastos.data || gastos.data.length === 0) return "";
+    const frequency: Record<string, number> = {};
+    gastos.data.forEach((item: data) => {
+      const classId = item.idClasseLancamento;
+      if (classId) {
+        frequency[classId] = (frequency[classId] || 0) + 1;
+      }
+    });
+    const sorted = Object.entries(frequency).sort((a, b) => b[1] - a[1]);
+    return sorted[0] ? sorted[0][0] : "";
+  }, [gastos]);
+
+  const classCounts = React.useMemo(() => {
+    if (!gastos || !gastos.data) return {};
+    return gastos.data.reduce((acc: Record<string, number>, item: data) => {
+      const id = item.idClasseLancamento;
+      if (id) {
+        acc[id] = (acc[id] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }, [gastos]);
+  
+
+  if (isLoading || isLoadingClassesLancamento) {
     return <p>Carregando...</p>;
   }
-  if (error) {
+  if (error || errorClassesLancamento) {
     return <p>Erro ao carregar</p>;
   }
 
@@ -57,6 +113,13 @@ export function PaginaGastos() {
           </Box>
           <ModalEditAddGastoComponent type="ADD" idUsuario={dataUser?.id} />
         </Box>
+        <FilterControls
+          filters={filters}
+          onChange={setFilters}
+          classesLancamentoOptions={classesLancamentoOptions.data}
+          mostUsedClass={mostUsedClass}
+          classCounts={classCounts}
+        />
         <TableComponent
           head={[
             { title: "#", aling: "center" },
