@@ -5,9 +5,13 @@ import {
   getUniqueGastoValidator,
   updateGastoValidators,
 } from "../validators/gastosValidators";
+import { z } from "zod";
 
 export async function GastosRoutes(app: FastifyInstance) {
   app.get("/gastos", async (request, reply) => {
+    const { ordem } = z.object({
+      ordem: z.enum(["asc", "desc"]).optional(),
+    }).parse(request.query);
     try {
       const gastos = await prisma.gastos.findMany({
         where: {
@@ -33,6 +37,9 @@ export async function GastosRoutes(app: FastifyInstance) {
               nome: true,
             },
           }
+        },
+        orderBy: {
+          criadoEm: ordem || "desc",
         }
       });
       reply.send({ data: gastos }).status(200);

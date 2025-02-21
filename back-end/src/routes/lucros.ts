@@ -5,9 +5,13 @@ import {
   getUniqueLucroValidator,
   updateLucroValidator,
 } from "../validators/lucrosValidators";
+import { z } from "zod";
 
 export async function LucroRoutes(app: FastifyInstance) {
   app.get("/lucros", async (request, reply) => {
+        const { ordem } = z.object({
+          ordem: z.enum(["asc", "desc"]).optional(),
+        }).parse(request.query);
     try {
       const lucros = await prisma.lucros.findMany({
         where: {
@@ -34,6 +38,9 @@ export async function LucroRoutes(app: FastifyInstance) {
             },
           },
         },
+        orderBy: {
+          criadoEm: ordem || "desc",
+        }
       });
       reply.send({ data: lucros }).status(200);
     } catch (err) {
