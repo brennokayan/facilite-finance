@@ -8,9 +8,14 @@ import imageLogin from "../../assets/logo 1.png";
 import imageLoginEsquerda from "../../assets/imgLogin.jpg";
 import { AuthenticateLogin } from "../../service/loginService";
 import { Navigate } from "react-router-dom";
+import { GetUser } from "../../service/usuarioService";
+import { useUser } from "../../hooks/userHooks";
 
 export function PaginaLogin() {
   type SnackBarType = "error" | "success" | "info";
+
+  // Obtemos o setUser do contexto para armazenar o usuário autenticado
+  const { setUser } = useUser();
 
   const [snackBar, setSnackBar] = React.useState<{
     open: boolean;
@@ -21,13 +26,21 @@ export function PaginaLogin() {
     message: "",
     type: "info",
   });
+
   const [loginData, setLoginData] = React.useState({ nome: "", senha: "" });
 
   const handleSnackBarClose = () => setSnackBar({ ...snackBar, open: false });
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     AuthenticateLogin(loginData)
       .then((response) => {
+        // Após autenticar, buscamos os dados do usuário e os armazenamos no contexto
+        GetUser(response.id).then((user) => {
+          setUser(user);
+          // Aqui, opte por não salvar no localStorage se preferir evitar riscos de segurança.
+          // Para persistência segura, considere o uso de cookies HttpOnly configurados no servidor.
+        });
         login(response.id, () => {
           setSnackBar({
             ...snackBar,
@@ -46,6 +59,7 @@ export function PaginaLogin() {
         });
       });
   };
+
   window.document.title = "ORCALITY - Login";
 
   React.useEffect(() => {
@@ -57,28 +71,27 @@ export function PaginaLogin() {
       });
     }
   }, []);
+
   if (isLogged()) {
     return (
-      <>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100%",
-            flexDirection: "column",
-          }}
-        >
-          <SnackBarInfo
-            message={snackBar.message}
-            type={snackBar.type}
-            toOpen={snackBar.open}
-            handleClose={handleSnackBarClose}
-          />
-          <Navigate to="/dashboard" />
-        </Box>
-      </>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+          flexDirection: "column",
+        }}
+      >
+        <SnackBarInfo
+          message={snackBar.message}
+          type={snackBar.type}
+          toOpen={snackBar.open}
+          handleClose={handleSnackBarClose}
+        />
+        <Navigate to="/dashboard" />
+      </Box>
     );
   } else {
     return (
@@ -104,16 +117,13 @@ export function PaginaLogin() {
               alt="Imagem de Login"
               width={"100%"}
               height={"100%"}
-              style={{
-                objectFit: "cover",
-              }}
+              style={{ objectFit: "cover" }}
             />
           </Box>
           <Box
             sx={{
               width: { xs: "100%", sm: "100%", md: "50%" },
               height: "100%",
-              // background: "linear-gradient(150deg, rgba(84,176,101,1) 35%, rgba(0,212,255,1) 100%)",
               background:
                 "linear-gradient(150deg, rgba(84,176,101,1) 25%, rgba(0,0,0,.9) 100%)",
               display: "flex",
@@ -131,7 +141,7 @@ export function PaginaLogin() {
                 bgcolor: "rgba(255, 255, 255, .178)",
                 blur: 2,
                 borderRadius: 2,
-                boxShadow: "5px 5px 5px  rgba(0, 0, 0, 0.5)",
+                boxShadow: "5px 5px 5px rgba(0, 0, 0, 0.5)",
                 animation: `fadeInLeft 0.6s`,
                 "@keyframes fadeInLeft": {
                   from: { opacity: 0, transform: "scale(0.5)" },
@@ -154,10 +164,7 @@ export function PaginaLogin() {
                 <Box sx={{ width: { xs: "45%", sm: "35%", md: "30%" } }}>
                   <img src={imageLogin} width={"100%"} />
                 </Box>
-                <Typography
-                  variant="h4"
-                  sx={{ fontWeight: "bold" }} //color: "rgba(84, 176, 101, 1)"
-                >
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                   ORCALITY
                 </Typography>
                 <Box
@@ -187,12 +194,12 @@ export function PaginaLogin() {
                     <TextFieldPersonalizado
                       required
                       autoComplete="off"
-                      onChange={(newValue) => {
+                      onChange={(newValue) =>
                         setLoginData({
                           ...loginData,
                           nome: newValue.target.value,
-                        });
-                      }}
+                        })
+                      }
                     />
                   </Box>
                   <Box
@@ -212,12 +219,12 @@ export function PaginaLogin() {
                     </Tooltip>
                     <TextFieldPersonalizado
                       autoComplete="off"
-                      onChange={(newValue) => {
+                      onChange={(newValue) =>
                         setLoginData({
                           ...loginData,
                           senha: newValue.target.value,
-                        });
-                      }}
+                        })
+                      }
                       type="password"
                       required
                     />

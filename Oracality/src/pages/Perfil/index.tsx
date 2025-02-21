@@ -18,6 +18,8 @@ export function PaginaPerfil() {
             ? "Alternar para Tema Claro"
             : "Alternar para Tema Escuro"}
         </Button>
+        <h2>Dados usuário em contexto:</h2>
+        <p>nome: {useUser().user?.nome}</p>
       </Container>
     </>
   );

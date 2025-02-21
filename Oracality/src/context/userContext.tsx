@@ -1,11 +1,24 @@
-import { createContext, useState } from "react";
+// userContext.tsx
+import React, { createContext, useState, useEffect } from "react";
 import { User, UserContextType } from "../types/userContextType";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Crie um provider para envolver a aplicação
 const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // Inicializa o estado lendo do sessionStorage (se existir)
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = sessionStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  // Sempre que o usuário mudar, atualiza o sessionStorage
+  useEffect(() => {
+    if (user) {
+      sessionStorage.setItem("user", JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem("user");
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
