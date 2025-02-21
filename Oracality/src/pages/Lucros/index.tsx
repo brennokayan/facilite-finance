@@ -114,11 +114,17 @@ export function PaginaLucros() {
               )}
             </h2>
           </Box>
-          <ModalEditAddLucroComponent type="ADD" idUsuario={dataUser?.id} filters={filters} />
+          <ModalEditAddLucroComponent
+            type="ADD"
+            idUsuario={dataUser?.id}
+            filters={filters}
+          />
         </Box>
 
         {/* Filtros */}
         <FilterControls
+          haveField={true}
+          haveOrdem={true}
           filters={filters}
           onChange={setFilters}
           classesLancamentoOptions={classesLancamentoOptions.data}

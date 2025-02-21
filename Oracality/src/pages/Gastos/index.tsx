@@ -117,11 +117,14 @@ export function PaginaGastos() {
           />
         </Box>
         <FilterControls
+          haveField={true}
+          haveOrdem={true}
           filters={filters}
           onChange={setFilters}
           classesLancamentoOptions={classesLancamentoOptions.data}
           mostUsedClass={mostUsedClass}
           classCounts={classCounts}
+
         />
         <TableComponent
           head={[

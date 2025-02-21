@@ -6,35 +6,15 @@ import ComponenteNavBar from "../../components/navBar";
 import useSWR from "swr";
 import lucrosService from "../../service/lucrosService";
 import gastosService from "../../service/gastosService";
-import { getDefaultDates, CalcFinalValue } from "../../utils/defaultFunctions";
+import { getDefaultDates } from "../../utils/defaultFunctions";
 import { FilterControls, FilterOptions } from "../../components/filterComponet";
-import { CompoenenteCardDashboard } from "./components/cardDashboard";
-
-
-// // Função para agregar os dados por mês (formato "MM/YYYY")
-// function aggregateByMonth(data: { valor: number; criadoEm: string }[]) {
-//   const aggregated: Record<string, number> = {};
-//   data.forEach((item) => {
-//     const date = new Date(item.criadoEm);
-//     const month = date.getMonth() + 1;
-//     const year = date.getFullYear();
-//     const key = `${month < 10 ? "0" + month : month}/${year}`;
-//     aggregated[key] = (aggregated[key] || 0) + item.valor;
-//   });
-//   const entries = Object.entries(aggregated).map(([mes, valor]) => ({ mes, valor }));
-//   // Ordena cronologicamente (assumindo que as chaves estão no formato MM/YYYY)
-//   entries.sort((a, b) => {
-//     const [mA, yA] = a.mes.split("/").map(Number);
-//     const [mB, yB] = b.mes.split("/").map(Number);
-//     return yA === yB ? mA - mB : yA - yB;
-//   });
-//   return entries;
-// }
+import { ComponenteContainerCardDashboard } from "./components/containerCardDashboard";
 
 export function PaginaPainelDeControle() {
   document.title = "ORCALITY - Painel de controle";
   const dataUser = useUser()?.user;
-  const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } = getDefaultDates();
+  const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } =
+    getDefaultDates();
 
   // Estado dos filtros (que também serão aplicados nas chamadas de lucros/gastos)
   const [filters, setFilters] = useState<FilterOptions>({
@@ -65,9 +45,7 @@ export function PaginaPainelDeControle() {
     return response.data;
   });
 
-  // Agrega os dados mensais para os gráficos
-  // const lucrosMonthly = useMemo(() => (lucros?.data ? aggregateByMonth(lucros.data) : []), [lucros]);
-  // const gastosMonthly = useMemo(() => (gastos?.data ? aggregateByMonth(gastos.data) : []), [gastos]);
+
 
   // Exibe feedback visual caso esteja carregando ou ocorra erro
   if (isLoadingLucros || isLoadingGastos) {
@@ -75,7 +53,12 @@ export function PaginaPainelDeControle() {
       <>
         <ComponenteNavBar nomeUsuario={dataUser?.nome || ""} />
         <Container maxWidth="lg">
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="80vh"
+          >
             <CircularProgress />
           </Box>
         </Container>
@@ -105,73 +88,7 @@ export function PaginaPainelDeControle() {
         </Box>
 
         {/* Cards de resumo */}
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 4,
-            justifyContent: "center",
-            pt: 2,
-          }}
-        >
-          <CompoenenteCardDashboard
-            icone={
-              <Box sx={{ color: (theme) => theme.palette.secondary.main }}>
-                {/* Ícone ou componente gráfico para classes */}
-                <span>🏷️</span>
-              </Box>
-            }
-            tipo="CLASSE-LANCAMENTO"
-            titulo="Classes de Lançamento"
-            valor={0}
-          />
-          <CompoenenteCardDashboard
-            icone={
-              <Box sx={{ color: (theme) => theme.palette.primary.main }}>
-                <span>💰</span>
-              </Box>
-            }
-            tipo="LUCROS"
-            titulo="Lucros"
-            valor={CalcFinalValue(lucros?.data.map((item) => item.valor))}
-          />
-          <CompoenenteCardDashboard
-            icone={
-              <Box sx={{ color: (theme) => theme.palette.error.main }}>
-                <span>💸</span>
-              </Box>
-            }
-            tipo="GASTOS"
-            titulo="Gastos"
-            valor={CalcFinalValue(gastos?.data.map((item) => item.valor))}
-          />
-        </Box>
-
-        {/* Gráficos dinâmicos
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 4,
-            my: 4,
-          }}
-        >
-          <ComponenteGraficoDashboard
-            titulo="Gráfico de Lucros"
-            XDataKey="mes"
-            BarDataKey="valor"
-            corBarra="primary"
-            data={lucrosMonthly}
-          />
-          <ComponenteGraficoDashboard
-            titulo="Gráfico de Gastos"
-            XDataKey="mes"
-            BarDataKey="valor"
-            corBarra="error"
-            data={gastosMonthly}
-          />
-        </Box> */}
+        <ComponenteContainerCardDashboard gastos={gastos} lucros={lucros} />
       </Container>
     </>
   );
