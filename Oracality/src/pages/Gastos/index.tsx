@@ -31,11 +31,30 @@ export function PaginaGastos() {
     <>
       <ComponenteNavBar nomeUsuario={dataUser?.nome || ""} />
       <Container maxWidth="lg">
-        <h1>{ToBRL(CalcFinalValue(gastos?.data.map((item: data) => item.valor)))}</h1>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-        }}>
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flex: 1,
+            }}
+          >
+            <p>Gasto Total:</p>
+            <h2>
+              {ToBRL(
+                CalcFinalValue(gastos?.data.map((item: data) => item.valor))
+              )}
+            </h2>
+          </Box>
           <ModalEditAddGastoComponent type="ADD" idUsuario={dataUser?.id} />
         </Box>
         <TableComponent
@@ -53,20 +72,30 @@ export function PaginaGastos() {
               <TableCell align="center">{index + 1}</TableCell>
               <TableCell align="center">{item.titulo}</TableCell>
               <TableCell align="center">{ToBRL(item.valor)}</TableCell>
-              <TableCell align="center">{item.ClasseLucro?.nome || "sem classe"}</TableCell>
+              <TableCell align="center">
+                {item.ClasseLucro?.nome || "sem classe"}
+              </TableCell>
               <TableCell align="center">{ToISODate(item?.criadoEm)}</TableCell>
               <TableCell align="center">
                 {item.estaPago ? <p>Pago</p> : <p>Não pago</p>}
               </TableCell>
-              <TableCell align="center">
-                <ModalEditAddGastoComponent data={item} type="EDIT" idUsuario={dataUser?.id} />
-                <IconButton onClick={() => {
-                  gastosService.update(item.id, { estaDeletado: true }).then(() => {
-                    mutate("gastos");
-
-                  })
-                }}>
-                  <DefaultIcons.Deletar/>
+              <TableCell align="center" sx={{ display: "flex" }}>
+                <ModalEditAddGastoComponent
+                  data={item}
+                  type="EDIT"
+                  idUsuario={dataUser?.id}
+                />
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    gastosService
+                      .update(item.id, { estaDeletado: true })
+                      .then(() => {
+                        mutate("gastos");
+                      });
+                  }}
+                >
+                  <DefaultIcons.Deletar />
                 </IconButton>
               </TableCell>
             </TableRow>

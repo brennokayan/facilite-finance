@@ -6,15 +6,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 import useSWR, { mutate } from "swr";
 import { SnackBarInfo } from "../../../../components/snackBarInfo/snackBarInfo";
 import { SnackBarType } from "../../../../types/SnackBarType";
 import { styleModal } from "../../../../utils/defaultFunctions";
 import { DefaultIcons } from "../../../../utils/defaultIcons";
-import { dataToEditAndAddgastoAddEditType } from "../../../../types/gastoType";
-import gastosService from "../../../../service/gastosService";
 import classeLancamentoService from "../../../../service/classeLancamentoService";
 import { optionsSelect } from "../renderSelectOptionsComponent";
 import { data, dataToEditAndAddLucroType } from "../../../../types/lucroType";
@@ -56,6 +54,20 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
     type: "info",
   });
 
+  useEffect(() => {
+    if (type === "EDIT" && data) {
+      setFormData({
+        titulo: data.titulo,
+        valor: data.valor,
+        idUsuario: data.idUsuario,
+        idClasseLancamento: data.idClasseLancamento,
+        estaRecebido: data.estaRecebido,
+        estaDeletado: data.estaDeletado,
+      });
+    }
+  }, [data, type]);
+
+
   function handleClose(
     _event: React.SyntheticEvent,
     reason: "backdropClick" | "escapeKeyDown"
@@ -71,14 +83,14 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
   }
 
   async function handleEdit(
-    data: dataToEditAndAddgastoAddEditType,
+    data: dataToEditAndAddLucroType,
     id: string
   ) {
     if(idUsuario===undefined){
       return;
     }
     else{
-      await gastosService
+      await lucrosService
       .update(id, data)
       .then(() => {
         setSnackBar({

@@ -1,8 +1,17 @@
 import { Box } from "@mui/material";
 import { DefaultIcons } from "../../../utils/defaultIcons";
 import { CompoenenteCardDashboard } from "./cardDashboard";
+import { gastosType } from "../../../types/gastoType";
+import { lucrosType } from "../../../types/lucroType";
+import { CalcFinalValue } from "../../../utils/defaultFunctions";
 
-export function ComponenteContainerCardDashboard() {
+interface Props {
+  gastos: gastosType | undefined;
+  lucros: lucrosType | undefined
+}
+
+
+export function ComponenteContainerCardDashboard(Props: Props) {
   return (
     <Box
       sx={{
@@ -31,7 +40,7 @@ export function ComponenteContainerCardDashboard() {
         }
         tipo="LUCROS"
         titulo="Ver Lucros"
-        valor={10.9}
+        valor={CalcFinalValue(Props.lucros?.data.map((item) => item.valor))}
       />
       <CompoenenteCardDashboard
         icone={
@@ -41,7 +50,7 @@ export function ComponenteContainerCardDashboard() {
         }
         tipo="GASTOS"
         titulo="Ver Gastos"
-        valor={10.9}
+        valor={CalcFinalValue(Props.gastos?.data.map((item) => item.valor))}
       />
     </Box>
   );

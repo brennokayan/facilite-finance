@@ -27,15 +27,33 @@ export function PaginaLucros() {
     <>
       <ComponenteNavBar nomeUsuario={dataUser?.nome || ""} />
       <Container maxWidth="lg">
-        <h1>{ToBRL(CalcFinalValue(lucros?.data.map((item: data) => item.valor)))}</h1>
         <Box
           sx={{
+            mt: 2,
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
           }}
         >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flex: 1,
+            }}
+          >
+            <p>Lucro Total:</p>
+            <h2>
+              {ToBRL(
+                CalcFinalValue(lucros?.data.map((item: data) => item.valor))
+              )}
+            </h2>
+          </Box>
           <ModalEditAddLucroComponent type="ADD" idUsuario={dataUser?.id} />
         </Box>
+
         <TableComponent
           head={[
             { title: "#", aling: "center" },
@@ -54,13 +72,20 @@ export function PaginaLucros() {
                 {item.ClasseLancamento?.nome || "sem classe"}
               </TableCell>
               <TableCell align="center">{ToISODate(item?.criadoEm)}</TableCell>
-              <TableCell align="center">
+              <TableCell
+                align="center"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
                 <ModalEditAddLucroComponent
                   data={item}
                   type="EDIT"
                   idUsuario={dataUser?.id}
                 />
                 <IconButton
+                  color="error"
                   onClick={() => {
                     lucrosService
                       .update(item.id, { estaDeletado: true })

@@ -16,7 +16,7 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
         sx={{
           width: {
             xs: 150,
-            lg: 300
+            lg: 300,
           },
           height: 150,
           display: "flex",
@@ -29,12 +29,13 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
           padding: 2,
           flexDirection: {
             xs: "column",
-            lg: "row"
+            lg: "row",
           },
         }}
-        onClick={() => {window.location.href="/"+props.tipo.toLowerCase()}}
+        onClick={() => {
+          window.location.href = "/" + props.tipo.toLowerCase();
+        }}
       >
-        {props.icone}
         <Box
           sx={{
             display: "flex",
@@ -46,18 +47,21 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
         >
           {props.tipo === "CLASSE-LANCAMENTO" ? (
             <>
-              <Typography
-                sx={{
-                  fontSize: {
-                    xs: 8,
-                    lg: 16
-                  },
-                  fontWeight: "bold",
-                  color: (theme) => theme.palette.secondary.main,
-                }}
-              >
-                Classes de Lançamento
-              </Typography>
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                {props.icone}
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: 8,
+                      lg: 16,
+                    },
+                    fontWeight: "bold",
+                    color: (theme) => theme.palette.secondary.main,
+                  }}
+                >
+                  Classes de Lançamento
+                </Typography>
+              </Box>
             </>
           ) : (
             <>
@@ -74,7 +78,7 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
                   sx={{
                     fontSize: {
                       xs: 12,
-                      lg: 16
+                      lg: 16,
                     },
                     fontWeight: "bold",
                     color: (theme) => theme.palette.text.secondary,
@@ -82,21 +86,24 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
                 >
                   {props.tipo}
                 </Typography>
-                <Typography
-                  sx={{
-                    fontSize: {
-                      xs: 12,
-                      lg: 24
-                    },
-                    fontWeight: "bold",
-                    color:
-                      props.tipo === "LUCROS"
-                        ? (theme) => theme.palette.primary.main
-                        : (theme) => theme.palette.error.main,
-                  }}
-                >
-                  {ToBRL(props.valor || 0)}
-                </Typography>
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                  {props.icone}
+                  <Typography
+                    sx={{
+                      fontSize: {
+                        xs: 12,
+                        lg: 24,
+                      },
+                      fontWeight: "bold",
+                      color:
+                        props.tipo === "LUCROS"
+                          ? (theme) => theme.palette.primary.main
+                          : (theme) => theme.palette.error.main,
+                    }}
+                  >
+                    {ToBRL(props.valor || 0)}
+                  </Typography>
+                </Box>
               </Box>
             </>
           )}
