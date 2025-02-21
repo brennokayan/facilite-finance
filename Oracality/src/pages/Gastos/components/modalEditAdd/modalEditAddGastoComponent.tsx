@@ -7,28 +7,26 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
-
 import useSWR, { mutate } from "swr";
 import { SnackBarInfo } from "../../../../components/snackBarInfo/snackBarInfo";
 import { SnackBarType } from "../../../../types/SnackBarType";
 import { styleModal } from "../../../../utils/defaultFunctions";
 import { DefaultIcons } from "../../../../utils/defaultIcons";
-import {
-  data,
-  dataToEditAndAddgastoAddEditType,
-} from "../../../../types/gastoType";
-import gastosService from "../../../../service/gastosService";
 import classeLancamentoService from "../../../../service/classeLancamentoService";
 import { optionsSelect } from "../renderSelectOptionsComponent";
 import { NumericFormat } from "react-number-format";
+import { filtersType } from "../../../../types/filterType";
+import gastosService from "../../../../service/gastosService";
+import { data, dataToEditAndAddgastoAddEditType } from "../../../../types/gastoType";
 
 interface Props {
   data?: data;
   type: "ADD" | "EDIT";
   idUsuario?: string;
+  filters?: filtersType;
 }
 
-export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
+export function ModalEditAddGastoComponent({ data, type, idUsuario, filters }: Props) {
   const {
     data: classeLancamento,
     error,
@@ -45,6 +43,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
     estaPago: true,
     estaDeletado: false,
   });
+
   const [open, setOpen] = React.useState(false);
   const [snackBar, setSnackBar] = React.useState<{
     open: boolean;
@@ -69,6 +68,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
     }
   }, [data, type]);
 
+
   function handleClose(
     _event: React.SyntheticEvent,
     reason: "backdropClick" | "escapeKeyDown"
@@ -87,16 +87,20 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
     data: dataToEditAndAddgastoAddEditType,
     id: string
   ) {
-    await gastosService
+    if(idUsuario===undefined){
+      return;
+    }
+    else{
+      await gastosService
       .update(id, data)
       .then(() => {
         setSnackBar({
           ...snackBar,
-          message: "Gasto editado com sucesso!",
+          message: "Lucro editado com sucesso!",
           type: "success",
           open: true,
         });
-        mutate("gastos"); // Atualiza os dados da lista
+        mutate(["gastos", filters]); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);
@@ -104,11 +108,12 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .catch(() => {
         setSnackBar({
           ...snackBar,
-          message: "Erro ao editar Gasto!",
+          message: "Erro ao editar Lucro!",
           type: "error",
           open: true,
         });
       });
+    }
   }
 
   async function handleAdd(data: dataToEditAndAddgastoAddEditType) {
@@ -117,11 +122,11 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .then(() => {
         setSnackBar({
           ...snackBar,
-          message: "Gasto adicionado com sucesso!",
+          message: "Lucro adicionado com sucesso!",
           type: "success",
           open: true,
         });
-        mutate("gastos"); // Atualiza os dados da lista
+        mutate(["gastos", filters]); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);
@@ -129,7 +134,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
       .catch(() => {
         setSnackBar({
           ...snackBar,
-          message: "Erro ao adicionar Gasto!",
+          message: "Erro ao adicionar Lucro!",
           type: "error",
           open: true,
         });
@@ -147,7 +152,7 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
               setOpen(true);
             }}
           >
-            <DefaultIcons.Adicionar size={22} /> Gastos
+            <DefaultIcons.Adicionar size={22} /> gastos
           </Button>
         </>
       ) : (
@@ -172,11 +177,11 @@ export function ModalEditAddGastoComponent({ data, type, idUsuario }: Props) {
         <Box sx={styleModal}>
           {type === "EDIT" ? (
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Editar Gasto
+              Editar Lucro
             </Typography>
           ) : (
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Adicionar novo Gasto
+              Adicionar novo Lucro
             </Typography>
           )}
           <Box>

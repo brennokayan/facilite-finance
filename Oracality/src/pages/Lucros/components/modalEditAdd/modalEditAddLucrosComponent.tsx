@@ -18,14 +18,16 @@ import { optionsSelect } from "../renderSelectOptionsComponent";
 import { data, dataToEditAndAddLucroType } from "../../../../types/lucroType";
 import lucrosService from "../../../../service/lucrosService";
 import { NumericFormat } from "react-number-format";
+import { filtersType } from "../../../../types/filterType";
 
 interface Props {
   data?: data;
   type: "ADD" | "EDIT";
   idUsuario?: string;
+  filters?: filtersType;
 }
 
-export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
+export function ModalEditAddLucroComponent({ data, type, idUsuario, filters }: Props) {
   const {
     data: classeLancamento,
     error,
@@ -99,7 +101,7 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
           type: "success",
           open: true,
         });
-        mutate("lucros"); // Atualiza os dados da lista
+        mutate(["lucros", filters]); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);
@@ -125,7 +127,7 @@ export function ModalEditAddLucroComponent({ data, type, idUsuario }: Props) {
           type: "success",
           open: true,
         });
-        mutate("lucros"); // Atualiza os dados da lista
+        mutate(["lucros", filters]); // Atualiza os dados da lista
         setTimeout(() => {
           setOpen(false);
         }, 750);

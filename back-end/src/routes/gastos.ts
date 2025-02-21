@@ -126,7 +126,7 @@ export async function GastosRoutes(app: FastifyInstance) {
   });
   app.put("/gasto/:id", async (request, reply) => {
     const { id } = getUniqueGastoValidator.parse(request.params);
-    const { idClasseLancamento, valor, estaPago, estaDeletado, idUsuario } =
+    const { idClasseLancamento, valor, estaPago, estaDeletado, idUsuario, titulo } =
       updateGastoValidators.parse(request.body);
     try {
       const gasto = await prisma.gastos.update({
@@ -134,6 +134,7 @@ export async function GastosRoutes(app: FastifyInstance) {
           id,
         },
         data: {
+          titulo,
           valor,
           estaPago,
           estaDeletado,

@@ -6,21 +6,28 @@ import useSWR, { mutate } from "swr";
 import lucrosService from "../../service/lucrosService";
 import { TableComponent } from "../../components/table/tableGastoComponent";
 import { data } from "../../types/lucroType";
-import { CalcFinalValue, ToBRL, ToISODate, getDefaultDates } from "../../utils/defaultFunctions";
+import {
+  CalcFinalValue,
+  ToBRL,
+  ToISODate,
+  getDefaultDates,
+} from "../../utils/defaultFunctions";
 import { DefaultIcons } from "../../utils/defaultIcons";
 import React from "react";
 import { FilterControls } from "../../components/filterComponet";
 import classeLancamentoService from "../../service/classeLancamentoService";
+import { filtersType } from "../../types/filterType";
 
 export function PaginaLucros() {
   const dataUser = useUser()?.user;
   document.title = "ORCALITY - Lucros";
 
   // Datas padrão para os filtros
-  const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } = getDefaultDates();
+  const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } =
+    getDefaultDates();
 
   // Estado dos filtros (ordenacao, campo e intervalo de datas)
-  const [filters, setFilters] = React.useState({
+  const [filters, setFilters] = React.useState<filtersType>({
     ordem: "desc" as "asc" | "desc",
     field: "criadoEm" as "criadoEm" | "valor",
     dataInicio: defaultDataInicio,
@@ -38,7 +45,11 @@ export function PaginaLucros() {
   });
 
   // SWR para buscar os lucros com os filtros aplicados
-  const { data: lucros, error, isLoading } = useSWR(["lucros", filters], async () => {
+  const {
+    data: lucros,
+    error,
+    isLoading,
+  } = useSWR(["lucros", filters], async () => {
     const response = await lucrosService.getAll(filters);
     return response.data;
   });
@@ -103,7 +114,7 @@ export function PaginaLucros() {
               )}
             </h2>
           </Box>
-          <ModalEditAddLucroComponent type="ADD" idUsuario={dataUser?.id} />
+          <ModalEditAddLucroComponent type="ADD" idUsuario={dataUser?.id} filters={filters} />
         </Box>
 
         {/* Filtros */}
@@ -141,6 +152,7 @@ export function PaginaLucros() {
                   data={item}
                   type="EDIT"
                   idUsuario={dataUser?.id}
+                  filters={filters}
                 />
                 <IconButton
                   color="error"

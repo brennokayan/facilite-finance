@@ -74,7 +74,6 @@ export function PaginaGastos() {
       return acc;
     }, {});
   }, [gastos]);
-  
 
   if (isLoading || isLoadingClassesLancamento) {
     return <p>Carregando...</p>;
@@ -111,7 +110,11 @@ export function PaginaGastos() {
               )}
             </h2>
           </Box>
-          <ModalEditAddGastoComponent type="ADD" idUsuario={dataUser?.id} />
+          <ModalEditAddGastoComponent
+            type="ADD"
+            idUsuario={dataUser?.id}
+            filters={filters}
+          />
         </Box>
         <FilterControls
           filters={filters}
@@ -147,6 +150,7 @@ export function PaginaGastos() {
                   data={item}
                   type="EDIT"
                   idUsuario={dataUser?.id}
+                  filters={filters}
                 />
                 <IconButton
                   color="error"
@@ -154,7 +158,7 @@ export function PaginaGastos() {
                     gastosService
                       .update(item.id, { estaDeletado: true })
                       .then(() => {
-                        mutate("gastos");
+                        mutate(["gastos", filters]);
                       });
                   }}
                 >
