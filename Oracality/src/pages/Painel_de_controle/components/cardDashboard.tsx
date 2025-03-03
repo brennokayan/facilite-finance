@@ -2,6 +2,7 @@
 import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import { ToBRL } from "../../../utils/defaultFunctions";
+import { useNavigate } from "react-router-dom";
 
 interface CardDashboardProps {
   titulo: string;
@@ -11,6 +12,7 @@ interface CardDashboardProps {
 }
 
 export function CompoenenteCardDashboard(props: CardDashboardProps) {
+  const navigate = useNavigate();
   return (
     <>
       <Card
@@ -34,7 +36,7 @@ export function CompoenenteCardDashboard(props: CardDashboardProps) {
           },
         }}
         onClick={() => {
-          window.location.href = "/" + props.tipo.toLowerCase();
+          navigate("/" + props.tipo.toLowerCase());
         }}
       >
         <Box

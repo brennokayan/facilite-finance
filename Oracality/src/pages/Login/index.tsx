@@ -7,7 +7,7 @@ import { DefaultIcons } from "../../utils/defaultIcons";
 import imageLogin from "../../assets/logo 1.png";
 import imageLoginEsquerda from "../../assets/imgLogin.jpg";
 import { AuthenticateLogin } from "../../service/loginService";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { addDataUserInCoockie } from "../../utils/defaultFunctions";
 import { GetUser } from "../../service/usuarioService";
 
@@ -29,7 +29,7 @@ export function PaginaLogin() {
   const [loginData, setLoginData] = React.useState({ nome: "", senha: "" });
 
   const handleSnackBarClose = () => setSnackBar({ ...snackBar, open: false });
-
+  const navigate = useNavigate();
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     AuthenticateLogin(loginData)
@@ -50,6 +50,7 @@ export function PaginaLogin() {
             open: true,
           });
         });
+        navigate("/dashboard");
       })
       .catch(() => {
         setSnackBar({

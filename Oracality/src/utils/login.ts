@@ -10,7 +10,7 @@ const login = (token: string, callback: () => void) => {
       return;
     }
     sessionStorage.setItem(STORAGE_KEY, token);
-    window.location.href = "/dashboard";
+    // window.location.href = "/dashboard";
   };
 
 const getToken = () => {
