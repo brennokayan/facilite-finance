@@ -64,3 +64,28 @@ export function getDefaultDates(){
     dataFim: lastDay.toISOString().slice(0, 10),
   };
 };
+
+
+export function addDataUserInCoockie(data: {nome: string, id: string}) {
+  // document.cookie = `nome=${nome}; expires=${new Date(2022, 1, 1).toUTCString()}`;
+  // document.cookie = `token=${token}; expires=${new Date(2022, 1, 1).toUTCString()}`;
+
+  document.cookie = `nome=${data.nome};`;
+  document.cookie = `token=${data.id};`;
+
+}
+
+
+export function getDataUserInCoockie() {
+  const cookies = document.cookie.split(";");
+  const data = cookies.map((cookie) => {
+    const [key, value] = cookie.split("=");
+    return { [key.trim()]: value.trim() };
+  });
+  const result = data.reduce((acc, item) => {
+    return { ...acc, ...item };
+  }
+  , {});
+
+  return result;
+}

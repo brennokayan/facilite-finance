@@ -1,18 +1,18 @@
 // ClasseLancamento.tsx
 import { Box, Container, TableCell, TableRow } from "@mui/material";
 import ComponenteNavBar from "../../components/navBar";
-import { useUser } from "../../hooks/userHooks";
 import useSWR from "swr";
 import classeLancamentoService from "../../service/classeLancamentoService";
 import { ModalEditClasseLancamentoComponet } from "./components/modal/ModalEditAddClasseLancamentoComponet";
 import { ModalDeleteClasseLancamentoComponent } from "./components/modal/ModalDeleteClasseLancamentoComponent";
 import { data } from "../../types/classeLancamentoType";
 import { TableComponent } from "../../components/table/tableGastoComponent";
+import { getDataUserInCoockie } from "../../utils/defaultFunctions";
 
 export function ClasseLancamento() {
   document.title = "ORCALITY - Classe de Lançamento";
 
-  const dataUser = useUser()?.user;
+  const dataUser = getDataUserInCoockie();
 
   // Usando SWR para buscar os dados com a chave "classeLancamentos"
   const { data: classeLancamento, error, isLoading } = useSWR(

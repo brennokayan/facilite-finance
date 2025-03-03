@@ -8,14 +8,13 @@ import imageLogin from "../../assets/logo 1.png";
 import imageLoginEsquerda from "../../assets/imgLogin.jpg";
 import { AuthenticateLogin } from "../../service/loginService";
 import { Navigate } from "react-router-dom";
+import { addDataUserInCoockie } from "../../utils/defaultFunctions";
 import { GetUser } from "../../service/usuarioService";
-import { useUser } from "../../hooks/userHooks";
+
 
 export function PaginaLogin() {
   type SnackBarType = "error" | "success" | "info";
 
-  // Obtemos o setUser do contexto para armazenar o usuário autenticado
-  const { setUser } = useUser();
 
   const [snackBar, setSnackBar] = React.useState<{
     open: boolean;
@@ -35,12 +34,14 @@ export function PaginaLogin() {
     e.preventDefault();
     AuthenticateLogin(loginData)
       .then((response) => {
-        // Após autenticar, buscamos os dados do usuário e os armazenamos no contexto
-        GetUser(response.id).then((user) => {
-          setUser(user);
-          // Aqui, opte por não salvar no localStorage se preferir evitar riscos de segurança.
-          // Para persistência segura, considere o uso de cookies HttpOnly configurados no servidor.
-        });
+        GetUser(response.id).then((response) => {
+          addDataUserInCoockie({
+            nome: response.nome,
+            id: response.id,
+          });
+        }
+        )
+
         login(response.id, () => {
           setSnackBar({
             ...snackBar,

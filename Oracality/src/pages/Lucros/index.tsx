@@ -1,6 +1,5 @@
 import { Box, Container, IconButton, TableCell, TableRow } from "@mui/material";
 import ComponenteNavBar from "../../components/navBar";
-import { useUser } from "../../hooks/userHooks";
 import { ModalEditAddLucroComponent } from "./components/modalEditAdd/modalEditAddLucrosComponent";
 import useSWR, { mutate } from "swr";
 import lucrosService from "../../service/lucrosService";
@@ -10,6 +9,7 @@ import {
   CalcFinalValue,
   ToBRL,
   ToISODate,
+  getDataUserInCoockie,
   getDefaultDates,
 } from "../../utils/defaultFunctions";
 import { DefaultIcons } from "../../utils/defaultIcons";
@@ -17,9 +17,10 @@ import React from "react";
 import { FilterControls } from "../../components/filterComponet";
 import classeLancamentoService from "../../service/classeLancamentoService";
 import { filtersType } from "../../types/filterType";
+import { getToken } from "../../utils/login";
 
 export function PaginaLucros() {
-  const dataUser = useUser()?.user;
+  const dataUser = getDataUserInCoockie();
   document.title = "ORCALITY - Lucros";
 
   // Datas padrão para os filtros
@@ -116,7 +117,7 @@ export function PaginaLucros() {
           </Box>
           <ModalEditAddLucroComponent
             type="ADD"
-            idUsuario={dataUser?.id}
+            idUsuario={getToken() ?? ""}
             filters={filters}
           />
         </Box>

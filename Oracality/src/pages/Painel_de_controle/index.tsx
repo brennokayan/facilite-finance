@@ -1,18 +1,17 @@
 // PaginaPainelDeControle.tsx
 import { useState } from "react";
 import { Container, Box, Typography, CircularProgress } from "@mui/material";
-import { useUser } from "../../hooks/userHooks";
 import ComponenteNavBar from "../../components/navBar";
 import useSWR from "swr";
 import lucrosService from "../../service/lucrosService";
 import gastosService from "../../service/gastosService";
-import { getDefaultDates } from "../../utils/defaultFunctions";
+import { getDataUserInCoockie, getDefaultDates } from "../../utils/defaultFunctions";
 import { FilterControls, FilterOptions } from "../../components/filterComponet";
 import { ComponenteContainerCardDashboard } from "./components/containerCardDashboard";
 
 export function PaginaPainelDeControle() {
   document.title = "ORCALITY - Painel de controle";
-  const dataUser = useUser()?.user;
+  const dataUser = getDataUserInCoockie();
   const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } =
     getDefaultDates();
 

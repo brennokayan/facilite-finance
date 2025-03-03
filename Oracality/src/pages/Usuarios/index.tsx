@@ -1,10 +1,10 @@
 import { Box, Container } from "@mui/material";
 import ComponenteNavBar from "../../components/navBar";
-import { useUser } from "../../hooks/userHooks";
+import { getDataUserInCoockie } from "../../utils/defaultFunctions";
 
 export function PaginaUsuarios() {
   document.title = "ORCALITY - Usuários";
-  const dataUser = useUser()?.user;
+  const dataUser = getDataUserInCoockie();
 
   return (
     <>

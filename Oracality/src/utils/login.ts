@@ -19,7 +19,7 @@ const getToken = () => {
 
 const logout = () => {
     sessionStorage.removeItem(STORAGE_KEY);
-    window.location.href = "/logout";
+    window.location.href = "/";
 }
 
 

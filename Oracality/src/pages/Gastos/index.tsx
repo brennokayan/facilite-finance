@@ -1,13 +1,13 @@
 //index.ts gastos
 import { Box, Container, IconButton, TableCell, TableRow } from "@mui/material";
 import ComponenteNavBar from "../../components/navBar";
-import { useUser } from "../../hooks/userHooks";
 import gastosService from "../../service/gastosService";
 import useSWR, { mutate } from "swr";
 import { TableComponent } from "../../components/table/tableGastoComponent";
 import { data } from "../../types/gastoType";
 import {
   CalcFinalValue,
+  getDataUserInCoockie,
   getDefaultDates,
   ToBRL,
   ToISODate,
@@ -17,10 +17,11 @@ import { DefaultIcons } from "../../utils/defaultIcons";
 import React from "react";
 import { FilterControls } from "../../components/filterComponet";
 import classeLancamentoService from "../../service/classeLancamentoService";
+import { getToken } from "../../utils/login";
 
 export function PaginaGastos() {
   document.title = "ORCALITY - Gastos";
-  const dataUser = useUser()?.user;
+  const dataUser = getDataUserInCoockie();
 
   const { dataInicio: defaultDataInicio, dataFim: defaultDataFim } =
     getDefaultDates();
@@ -84,7 +85,7 @@ export function PaginaGastos() {
 
   return (
     <>
-      <ComponenteNavBar nomeUsuario={dataUser?.nome || ""} />
+      <ComponenteNavBar nomeUsuario={dataUser.nome || ""} />
       <Container maxWidth="lg">
         <Box
           sx={{
@@ -112,7 +113,7 @@ export function PaginaGastos() {
           </Box>
           <ModalEditAddGastoComponent
             type="ADD"
-            idUsuario={dataUser?.id}
+            idUsuario={getToken() ?? ""}
             filters={filters}
           />
         </Box>

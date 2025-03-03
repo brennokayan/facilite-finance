@@ -16,7 +16,7 @@ app.register(cors, {
 app.register(Routes);
 
 app.listen({
-    port: process.env.PORT ? parseInt(process.env.PORT) : 3333,
+    port: process.env.PORT ? parseInt(process.env.PORT) : 3334,
     host: "0.0.0.0"
 }).then(() => {
     console.log("Por Favor acesse http://localhost:3333/test-route para ver verificar o funcionamento do servidor");
