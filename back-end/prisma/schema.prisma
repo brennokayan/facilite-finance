@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nome         String   @unique
+  senha        String
+  estaAtivo    Boolean  @default(true)
+  estaDeletado Boolean  @default(false)
+  estaAdmin    Boolean
+  Lucros       Lucros[]
+  Gastos       Gastos[]
+
+  criadoEm     DateTime @default(now())
+  ModificadoEm DateTime @updatedAt
+}
+
+model Lucros {
+  id            String      @id @default(cuid())
+  titulo        String
+  valor         Float
+  estaRecebido  Boolean     @default(true)
+  estaDeletado  Boolean     @default(false)
+  idUsuario     String
+  Usuario       Usuario     @relation(fields: [idUsuario], references: [id])
+  idClasseLancamento String
+  ClasseLancamento   ClasseLancamento @relation(fields: [idClasseLancamento], references: [id])
+
+  criadoEm     DateTime @default(now())
+  ModificadoEm DateTime @updatedAt
+}
+
+model Gastos {
+  id            String      @id @default(cuid())
+  titulo        String
+  valor         Float
+  estaPago      Boolean     @default(true)
+  estaDeletado  Boolean     @default(false)
+  idUsuario     String
+  Usuario       Usuario     @relation(fields: [idUsuario], references: [id])
+  idClasseLancamento String
+  ClasseLucro   ClasseLancamento @relation(fields: [idClasseLancamento], references: [id])
+
+  criadoEm     DateTime @default(now())
+  ModificadoEm DateTime @updatedAt
+}
+
+model ClasseLancamento {
+  id           String  @id @default(cuid())
+  nome         String
+  estaDeletado Boolean @default(false)
+  criadoEm     DateTime @default(now())
+  ModificadoEm DateTime @updatedAt
+  Gastos       Gastos[]
+  Lucros       Lucros[]
+}
