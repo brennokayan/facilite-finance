@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { PrivateRoutes } from "./PrivateRoutes";
 import { PaginaLogin } from "../pages/Login";
 import { PaginaLogout } from "../pages/Logout";
@@ -23,7 +23,7 @@ export function DefaultRoutes() {
           <Route path="/classe-lancamento" element={<ClasseLancamento />} />
           <Route path="/usuarios" element={<PaginaUsuarios />} />
           <Route path="/perfil" element={<PaginaPerfil />} />
-          <Route path="*" element={<>not found</>} />
+          <Route path="*" element={<Navigate to={"/dashboard"} />} />
         </Route>
       </Routes>
     </BrowserRouter>
