@@ -50,7 +50,7 @@ export function PaginaLogin() {
             open: true,
           });
         });
-        navigate("/dashboard");
+        navigate("/");
       })
       .catch(() => {
         setSnackBar({
